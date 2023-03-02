@@ -1,0 +1,55 @@
+﻿Aravinda Lakamapurmath
+Aravind.lmath111@gmail.com
+8748077332
+Solution for given technical  Challenge.
+This code is written in C and is for configuring the GPIO pins of an STM32F10x microcontroller.
+#include "stm32f10x.h"
+#define NUM_SWITCHES 4
+#define SWITCH_PINS {GPIO_Pin_34, GPIO_Pin_33, GPIO_Pin_32, GPIO_Pin_31}
+#define LED_PINS {GPIO_Pin_10, GPIO_Pin_11, GPIO_Pin_12, GPIO_Pin_13}
+GPIO_InitTypeDef GPIO_InitStructure;
+int switchStates[NUM_SWITCHES] = {0};
+void GPIO_Configuration(void) {
+  RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA, ENABLE);
+  GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+  GPIO_InitStructure.GPIO_Pin = SWITCH_PINS;
+  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IPU;
+  GPIO_Init(GPIOA, &GPIO_InitStructure);
+  GPIO_InitStructure.GPIO_Pin = LED_PINS;
+  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
+  GPIO_Init(GPIOA, &GPIO_InitStructure);
+}
+int main(void) {
+  GPIO_Configuration();
+  while (1) {
+    // read switch states and turn on/off corresponding LEDs
+    for (int i = 0; i < NUM_SWITCHES; i++) {
+      switchStates[i] = GPIO_ReadInputDataBit(GPIOA, SWITCH_PINS[i]);
+      if (switchStates[i] == GPIO_Pin_Reset) {
+        GPIO_SetBits(GPIOA, LED_PINS[i]);
+      } else {
+        GPIO_ResetBits(GPIOA, LED_PINS[i]);
+      }
+    }
+  }
+}
+
+1. The line #include "stm32f10x.h" includes a header file that provides access to the STM32F10x's hardware abstraction layer (HAL) library. 
+2. This library provides functions for configuring and controlling the microcontroller's various peripherals, including GPIO pins.
+3. The code defines three constants: NUM_SWITCHES, SWITCH_PINS, and LED_PINS. NUM_SWITCHES is set to 4, indicating that there are four switches connected to the microcontroller. 
+4. SWITCH_PINS and LED_PINS are arrays that contain the GPIO pins used for the switches and LEDs, respectively.
+5. The GPIO_InitTypeDef struct is defined to store the configuration settings for a GPIO pin. The GPIO_Configuration function sets up the GPIO pins for input and output.
+6. In the main function, the GPIO_Configuration function is called to set up the GPIO pins. The program then enters an infinite loop that reads the state of the switches and sets the state of the corresponding LEDs. 
+7. This is done using a for loop that iterates over each switch and reads its state using the GPIO_ReadInputDataBit function. If the switch is pressed (i.e., its state is GPIO_Pin_Reset), the corresponding LED is turned on using the GPIO_SetBits function. Otherwise, the LED is turned off using the GPIO_ResetBits function.
+8. Overall, this code sets up the GPIO pins on an STM32F10x microcontroller and uses them to control LEDs based on the state of switches.
+ Conclusion: -
+1. The program runs for turning on and off the LED depending on the button press. LED should be on when the button is pressed, and it should go off when the button is released 
+a. LED one should be on when switch one is pressed 
+b. LED two should be on when switch two is pressed 
+c. LED three should be on when switch three is pressed 
+d. LED four should be on when switch four is pressed 
+2. The program successfully count the switch presses and blink the corresponding LED to the
+    number of times the switch pressed.
+
+
+
